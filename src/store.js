@@ -18,13 +18,18 @@ export default new Vuex.Store({
   },
   actions: {
     getListOfTopCrypoCurrencies(context) {
-      Vue.$http
-        .get('https://api.coinranking.com/v1/public/coins/?limit=100')
-        .then((response) => {
-          if (response.status == 200) {
-            context.commit('setCurrenciesList', response.data.data);
-          }
-        });
+      return new Promise((resolve, reject) => {
+        Vue.$http
+          .get('https://api.coinranking.com/v1/public/coins/?limit=100')
+          .then((response) => {
+            if (response.status == 200) {
+              context.commit('setCurrenciesList', response.data.data);
+              resolve(response.data.data);
+            } else {
+              reject('error');
+            }
+          });
+      });
     },
   },
 });
